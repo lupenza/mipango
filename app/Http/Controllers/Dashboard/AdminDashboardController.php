@@ -14,19 +14,19 @@ class AdminDashboardController extends Controller
 {
     public function index(){
         $ledgers =Ledger::with('user','category','account')->latest()->limit(6)->get();
-        $active_user =User::with('accounts')->whereHas('accounts')->count();
+        $active_user =User::has('accounts')->count();
        $data =[
         'user'           =>User::count(),
         'active_user'    =>$active_user,
-        'inactive_user'  =>User::with('accounts')->whereDoesntHave('accounts')->count(),
+       // 'inactive_user'  =>User::with('accounts')->whereDoesntHave('accounts')->count(),
+        'inactive_user'  =>User::selectRaw('COUNT(*) AS count')
+                            ->leftJoin('accounts', 'users.id', '=', 'accounts.user_id')
+                            ->whereNull('accounts.user_id')
+                            ->count(),
         'average_income' =>Ledger::sum('amount')/$active_user,
+        'transactions'    =>Ledger::cursor(),
        ];
-    //    $data =[
-    //     'user'           =>12,
-    //     'active_user'    =>12,
-    //     'inactive_user'  =>34,
-    //     'average_income' =>344,
-    //    ];
+  
         return view('dashboards.admin_dashboard',compact('data','ledgers'));
     }
 
