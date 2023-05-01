@@ -26,7 +26,7 @@
         </a>
     </li> --}}
     <li>
-        <a href="{{ route('app.users')}}" class="waves-effect {{ Route::is('app.users') ? "li-active" : ""}}">
+        <a href="{{ route('app.users')}}" class="waves-effect {{ (Route::is('app.users') || Route::is('user.profile')) ? "li-active" : ""}}">
             <i class="bx bx-user"></i>
             <span key="t-file-manager">App Users</span>
         </a>
@@ -58,13 +58,13 @@
     </li>
     <li class="menu-title" key="t-menu">System User Management</li>
     <li>
-        <a href="{{ route('users.index')}}" class="waves-effect {{ Route::is('users.index') ? "li-active" : ""}}">
+        <a href="{{ route('users.index')}}" class="waves-effect {{ (Route::is('users.index') || Route::is('users.show')) ? "li-active" : ""}}">
             <i class="bx bx-user"></i>
             <span key="t-file-manager">Users</span>
         </a>
     </li>
     <li>
-        <a href="{{ route('roles.index')}}" class="waves-effect {{ Route::is('roles.index') ? "li-active" : ""}}">
+        <a href="{{ route('roles.index')}}" class="waves-effect {{ (Route::is('roles.index') || Route::is('roles.show')) ? "li-active" : ""}}">
             <i class="bx bx-align-justify"></i>
             <span key="t-file-manager">Roles</span>
         </a>

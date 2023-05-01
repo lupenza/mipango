@@ -27,13 +27,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'last_name',
         'email',
         'password',
         'status',
-        'phone_number',
-        'remarks',
-        'uuid',
-        'created_by'
+        'phone',
+        'uuid'
     ];
 
     /**
@@ -70,12 +69,13 @@ class User extends Authenticatable
     public static function store($user_data){
        
         $user =User::create([
-            'name'         =>ucwords($user_data['first_name'].' '.$user_data['middle_name'].' '.$user_data['last_name']),
-            'username'     =>$user_data['username'],
-            'phone_number' =>$user_data['phone_number'],
-            'created_by'   =>Auth::user()->id ?? null,
-            'uuid'         =>(string)Str::orderedUuid(),
-            'password'     =>Hash::make('Act2023'),
+            'name'         =>ucwords($user_data['first_name']),
+            'last_name'    =>ucwords($user_data['last_name']),
+            'email'         =>$user_data['username'],
+            'phone'         => preg_replace( '/^0/', '+255',$user_data['phone_number']),
+           // 'created_by'    =>Auth::user()->id ?? null,
+            'uuid'          =>(string)Str::orderedUuid(),
+            'password'      =>Hash::make('Mipango@2023'),
         ]);
 
         return $user;

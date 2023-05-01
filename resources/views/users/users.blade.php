@@ -44,21 +44,21 @@
                                     <th>Action</th>
                                 </tr>
                                 </thead>
-                                {{-- <tbody>
+                                <tbody>
                                     @foreach ($users as $user)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ date('d ,M-Y H:i:s',strtotime($user->created_at))}}</td>
-                                        <td>{{ $user->name }}</td>
-                                        <td>{{ $user->username }}</td>
-                                        <td>{{ $user->phone_number }}</td>
+                                        <td>{{ $user->name.' '.$user->last_name }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->phone }}</td>
                                         <td>
                                           @foreach ($user->roles as $role)
                                                 {{ $role->name.' ,' }}
                                           @endforeach
                                         </td>
                                         <td>
-                                            @if ($user->status == "Active")
+                                            @if ($user->active == 1)
                                             <span class="badge badge-pill badge-soft-success font-size-13">Active</span>
                                             @else
                                             <span class="badge badge-pill badge-soft-danger font-size-13">Inactive</span>
@@ -68,7 +68,7 @@
                                             <a href="{{ route('users.show',$user->uuid)}}">
                                                 <button class="btn btn-success btn-sm"> <span class="fa fa-edit"></span></button>
                                             </a>
-                                             @if ($user->status == "Active")
+                                             @if ($user->active == 1)
                                             <button title="Disable" class="btn btn-warning btn-sm" id="{{ $user->uuid}}" onclick="deactivate_user(id)"><span class="fa fa-times"></span></button>
                                              @else
                                             <button title="Enable" class="btn btn-info btn-sm" id="{{ $user->uuid}}" onclick="enable_user(id)"  ><span class="fa fa-check"></span></button>
@@ -77,7 +77,7 @@
                                         </td>
                                     </tr>
                                     @endforeach
-                                </tbody> --}}
+                                </tbody>
                                
                             </table>
                         </div>
@@ -105,10 +105,10 @@
                         <label for="Name">First name</label>
                         <input type="text" class="form-control" name="first_name" placeholder="Write First Name....." required>
                     </div>
-                    <div class="col-md-12">
+                    {{-- <div class="col-md-12">
                         <label for="Name">Middle name</label>
                         <input type="text" class="form-control" name="middle_name" placeholder="Write Middle Name....." required>
-                    </div>
+                    </div> --}}
                     <div class="col-md-12">
                         <label for="Name">Last name</label>
                         <input type="text" class="form-control" name="last_name" placeholder="Write Last Name....." required>
@@ -121,7 +121,7 @@
                         <label for="Name">Email / Username </label>
                         <input type="text" name="username" class="form-control" placeholder="Write Email / Username ....." required>
                     </div>
-                    {{-- <div class="col-md-12">
+                    <div class="col-md-12">
                         <label for="Name">User role </label>
                         <select name="user_role" class="form-select" required>
                             <option value="" selected>Please choose User role</option>
@@ -129,7 +129,7 @@
                             <option value="{{ $role->name}}">{{ $role->name }}</option>
                             @endforeach
                         </select>
-                    </div> --}}
+                    </div>
                     <div class="col-md-12" style="margin-top: 5px" id="alert">
 
                     </div>

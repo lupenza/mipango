@@ -32,16 +32,20 @@
                             <input type="hidden" value="{{ $user->uuid}}" name="user_uuid">
                             <div class="form-group row">
                                 <div class="col-md-12">
-                                    <label for=""> Name</label>
+                                    <label for="">First Name</label>
                                     <input type="text" name="name" class="form-control" value="{{ $user->name }}" required>
                                 </div>
                                 <div class="col-md-12">
+                                    <label for="">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control" value="{{ $user->last_name }}" required>
+                                </div>
+                                <div class="col-md-12">
                                     <label for=""> Phone Number</label>
-                                    <input type="text" name="phone_number" class="form-control" value="{{ $user->phone_number }}" required>
+                                    <input type="text" name="phone_number" class="form-control" value="{{ $user->phone }}" required>
                                 </div>
                                 <div class="col-md-12">
                                     <label for=""> Email / Username</label>
-                                    <input type="text" name="username" class="form-control" value="{{ $user->username }}" readonly>
+                                    <input type="text" name="username" class="form-control" value="{{ $user->email }}" readonly>
                                 </div>
                                 
                             </div>

@@ -38,6 +38,7 @@ Route::get('transactions',[TransactionController::class,'index'])->name('transac
 Route::get('budgets',[BudgetController::class,'index'])->name('budgets');
 Route::get('goals',[TransactionController::class,'goals'])->name('goals');
 Route::get('application/users',[UserController::class,'appUsers'])->name('app.users');
+Route::get('user/profile/{user_uuid}',[UserController::class,'userprofile'])->name('user.profile');
 
 
   #########  Management ########

@@ -78,7 +78,7 @@
                 <div class="form-group row">
                     <div class="col-md-12">
                         <label for="Name">Name</label>
-                        <input type="text" class="form-control" name="name" placeholder="Write Role Name....." required>
+                        <input type="text" class="form-control" name="name" placeholder="Write Permission Name....." required>
                     </div>
                     <div class="col-md-12">
                         <label for="Name">Description</label>

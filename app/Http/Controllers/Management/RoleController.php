@@ -21,7 +21,7 @@ class RoleController extends Controller
         // foreach ($roles as $key) {
         //     $key->update(['uuid'=>(string)Str::orderedUuid()]);
         // }
-            $roles =[];
+            $roles =Role::get();
         return view('users.roles',compact('roles'));
     }
 

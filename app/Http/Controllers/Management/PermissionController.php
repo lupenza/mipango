@@ -19,10 +19,10 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        // $permissions =Permission::with('permission_category')->get();
-        // $categories  =PermissionCategory::get();
-        $permissions =[];
-        $categories =[];
+         $permissions =Permission::with('permission_category')->get();
+         $categories  =PermissionCategory::get();
+       // $permissions =[];
+        //$categories =[];
         return view('users.permissions',compact('permissions','categories'));
     }
 

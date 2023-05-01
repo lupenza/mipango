@@ -86,7 +86,9 @@
                                     <td>{{ $user->ledgers->count()}}</td>
                                     <td>{{ $user->budgets->count()}}</td>
                                     <td>
+                                        <a href="{{ route('user.profile',$user->uuid)}}">
                                         <button class="btn btn-success btn-sm" ><span class="fa fa-user"></span></button>
+                                        </a>
                                     </td>
                                 </tr>
                                     

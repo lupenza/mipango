@@ -24,6 +24,11 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+     public function userprofile($user_uuid){
+        $user =User::with('accounts','ledgers','budgets','accounts.account_type')->where('uuid',$user_uuid)->first();
+        return view('users.app_user_profile',compact('user'));
+     }
+
      public function appUsers(Request $request){
         $requests =$request->all();
         $requests ? $num =null : $num =1000;
@@ -39,17 +44,18 @@ class UserController extends Controller
 
     public function index()
     {
-        // $users =User::get();
-        // foreach ($users as $key) {
-        //     $key->update([ 'uuid'=>(string) Str::orderedUuid()]);
+       // set_time_limit(0);
+        // $users =User::cursor();
+        // foreach ($users as $key ) {
+        //     $key->update(['uuid'=>(string)Str::orderedUuid()]);
         // }
-        // return "success";
-        // $users =User::with('roles')->whereHas('roles',function($query){
-        //     $query->where('name','Super Admin')
-        //           ->orWhere('name','Admin');
-        // })->latest()->get();
-        // $roles =Role::whereIn('id',[2,3])->get();
-        return view('users.users');
+        $roles =Role::whereIn('id',[1,2])->get();
+       
+        $users =User::with('roles')->whereHas('roles',function($query){
+            $query->where('name','Super Admin')
+                  ->orWhere('name','Admin');
+        })->latest()->get();
+        return view('users.users',compact('roles','users'));
     }
 
     /**
@@ -71,6 +77,7 @@ class UserController extends Controller
     public function store(UserRequest $UserRequest)
     {
         $user_data =$UserRequest->validated();
+       // return $user_data;
 
         $user =User::store($user_data);
 
@@ -138,7 +145,8 @@ class UserController extends Controller
 
         $user =User::where('uuid',$user_data['user_uuid'])->first();
         $user->name =ucwords($user_data['name']);
-        $user->phone_number =$user_data['phone_number'];
+        $user->name =ucwords($user_data['last_name']);
+        $user->phone =preg_replace( '/^0/', '+255',$user_data['phone_number']); 
         $user->save();
 
         if ($permissions) {
@@ -171,13 +179,13 @@ class UserController extends Controller
         $action    =$request->input('action');
 
         if ($action == "activate") {
-            $user_status ="Active";
+            $user_status =1;
         } else {
-            $user_status ="Inactive";
+            $user_status =0;
         }
 
         $user =User::where('uuid',$user_uuid)->first();
-        $user->status =$user_status;
+        $user->active =$user_status;
         $user->save();
 
         return response()->json([

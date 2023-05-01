@@ -24,8 +24,9 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone_number'  =>['required','min:12','max:12'],
+            'phone_number'  =>['required','min:10','max:10'],
             'name'          =>['required','max:70','min:3'],
+            'last_name'          =>['required','max:70','min:3'],
             'user_uuid'          =>'required'
         ];
     }
