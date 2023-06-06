@@ -58,7 +58,7 @@
                             <div class="col-md-3">
                                 <label for="Start Date">Transaction Type</label>
                                 <select name="transaction_type"  class="form-control" id="">
-                                    <option value="{{ $requests['transaction_type'] ?? ""}}" selected>{{ $requests['transaction_type'] ?? "Choose Transactional Type"}} </option>
+                                    <option value="{{ $requests['transaction_type'] ?? ''}}" selected>{{ $requests['transaction_type'] ?? "Choose Transactional Type"}} </option>
                                     <option value="Dr">Dr</option>
                                     <option value="Cr">Cr</option>
                                 </select>

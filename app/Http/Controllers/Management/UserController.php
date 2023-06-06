@@ -44,11 +44,6 @@ class UserController extends Controller
 
     public function index()
     {
-       // set_time_limit(0);
-        // $users =User::cursor();
-        // foreach ($users as $key ) {
-        //     $key->update(['uuid'=>(string)Str::orderedUuid()]);
-        // }
         $roles =Role::whereIn('id',[1,2])->get();
        
         $users =User::with('roles')->whereHas('roles',function($query){

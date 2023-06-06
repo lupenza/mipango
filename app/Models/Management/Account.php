@@ -10,6 +10,6 @@ class Account extends Model
     use HasFactory;
 
     public function account_type(){
-        return $this->hasOne(Accounttype::class,'id','account_type_id');
+        return $this->hasOne(AccountType::class,'id','account_type_id');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use DB;
 
 class HomeController extends Controller
 {
@@ -24,31 +25,38 @@ class HomeController extends Controller
      */
     
     public function user(){
-        $users =User::get();
+        set_time_limit(0);
 
-        foreach ($users as $key) {
-            $user =User::where('id',$key->id)->first();
-            if ($user) {
-               switch ($user->role_id) {
-                case 1:
-                    $role ="Super Admin";
-                    break;
-                
-                case 3:
-                    $role ="User";
-                    break;
-                
-                default:
-                    $role="Admin";
-                    break;
-               }
-
-               $user->assignRole($role);
+        $table =
+        
+        $done = 0;
+        $users =User::query()->latest()->chunk(100, function($users) use($done) {
+            foreach ($users as $user) {
+                if ($user) {
+                    switch ($user->role_id) {
+                     case 1:
+                         $role ="Super Admin";
+                         break;
+                     
+                     case 3:
+                         $role ="User";
+                         break;
+                     
+                     default:
+                         $role="Admin";
+                         break;
+                    }
+     
+                    $user->assignRole($role);
+                    $done ++;
+                 }
                
             }
-        }
+        });
 
-        return "success";
+       
+
+        return "success " . $done;
     }
 
     public function index()

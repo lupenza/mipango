@@ -31,11 +31,11 @@
                         <div class="form-group row">
                             <div class="col-md-3">
                                 <label for="Start Date">Start Date</label>
-                                <input type="date" class="form-control"  value="{{ $requests['start_date'] ?? null}}" name="start_date">
+                                <input type="date" class="form-control"  value="{{ $requests['start_date'] ?? null}}" name="start_date" required>
                             </div>
                             <div class="col-md-3">
                                 <label for="Start Date">End Date</label>
-                                <input type="date" class="form-control" value="{{ $requests['end_date'] ?? null}}" name="end_date">
+                                <input type="date" class="form-control" value="{{ $requests['end_date'] ?? null}}" name="end_date" required>
                             </div>
                             <div class="col-md-3">
                                 <label for="Start Date">Device Type</label>
@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="Start Date">Phone Number</label>
-                                <input type="text" class="form-control" value="{{ $requests['scoring_end_date'] ?? null}}" placeholder="Write Phone Number">
+                                <input type="text" name="phone_number" class="form-control" value="{{ $requests['phone_number'] ?? null}}" placeholder="Write Phone Number">
                             </div>
                         </div>
                         <div class="form-group row" style="margin-top: 10px" >

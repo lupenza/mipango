@@ -19,7 +19,7 @@ class CategoryGroupController extends Controller
      */
     public function index()
     {
-        $categories =CategoryGroup::get();
+        $categories =CategoryGroup::latest()->get();
 
         // foreach ($categories as $key) {
         //     $key->update([

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Management\Category; 
 use App\Models\Management\CategoryGroup;
 use App\Http\Requests\CategoryStoreRequest;
-use App\Http\Requests\CategoryUpdateRequest;
+use App\Http\Requests\CategoryUpdateRequest; 
 use Str;
 use Auth;
 
@@ -21,6 +21,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories =Category::latest()->get();
+       // return $categories;
         $category_groups =CategoryGroup::get();
         return view('managements.system_parts.categories',compact('categories','category_groups'));
     }
