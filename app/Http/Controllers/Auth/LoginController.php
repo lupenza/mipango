@@ -77,6 +77,7 @@ class LoginController extends Controller
                 return response()->json([
                     'success' =>false,
                     'errors' =>'You dont have Permission to access this site',
+                    ''
                 ],500);
                }
                

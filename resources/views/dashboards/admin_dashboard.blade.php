@@ -1,5 +1,13 @@
 @extends('layouts.master')
 @section('content')
+<style>
+    .mini-stats-wid .card-body{
+        border-left: 4px solid #FA0824;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px: 
+        
+    }
+</style>
 
     <div class="page-content">
         <div class="container-fluid">
@@ -65,7 +73,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="card mini-stats-wid">
-                        <div class="card-body">
+                        <div class="card-body" style="">
                             <div class="d-flex">
                                 <div class="flex-grow-1">
                                     <p class="text-muted fw-medium">Inactive Users</p>
@@ -74,7 +82,7 @@
 
                                 <div class="flex-shrink-0 align-self-center ">
                                     <div class="avatar-sm rounded-circle bg-danger mini-stat-icon">
-                                        <span class="avatar-title rounded-circle bg-danger">
+                                        <span class="avatar-title">
                                             <i class="bx bx-user font-size-24"></i>
                                         </span>
                                     </div>
@@ -88,13 +96,13 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="flex-grow-1">
-                                    <p class="text-muted fw-medium">Average Income</p>
-                                    <h4 class="mb-0">{{ number_format($data['average_income'])}}</h4>
+                                    <p class="text-muted fw-medium">Average Transaction</p>
+                                    <h4 class="mb-0">{{ number_format($data['transactions']->sum('amount')/$data['active_user'])}}</h4>
                                 </div>
 
                                 <div class="flex-shrink-0 align-self-center">
                                     <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                        <span class="avatar-title rounded-circle bg-primary">
+                                        <span class="avatar-title">
                                             <i class="bx bx-purchase-tag-alt font-size-24"></i>
                                         </span>
                                     </div>
@@ -113,7 +121,7 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title mb-4">Monthly Summary of Total Users , No of Transactions vs No of Budgets</h4>
+                            <h4 class="card-title mb-4">Monthly Summary of Total Users , No of Transactions vs No of Budgets For {{ date('Y')}}</h4>
                             
                             <div id="column_chart"  data-colors='["#FA0824","#556EE5", "#34C38F"]' class="apex-charts" dir="ltr"></div>                                      
                         </div>
@@ -129,6 +137,31 @@
                     </div><!--end card-->
                 </div>
 
+            </div>
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4 text-center">User Accounts Distributions For {{ date('Y')}}</h4>
+                            
+                            <div id="pie_chart" data-colors='["--bs-primary","--bs-success", "--bs-info"]' class="apex-charts" dir="ltr"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4 text-center">User Budget Distributions For {{ date('Y')}}</h4>
+                            
+                            <div id="pie_chart_2" data-colors='["--bs-primary","--bs-success", "--bs-info"]' class="apex-charts" dir="ltr"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end col -->
+                
+               
+                <!-- end col -->
             </div>
             <div class="row">
                 <div class="col-lg-12">
@@ -183,7 +216,8 @@
     {{-- <script src="{{ asset('assets/js/pages/apexcharts.init.js')}}"></script> --}}
     <script>
         $(document).ready(function(){
-            
+            pieChart();
+            pieChartBudget();
             var promise=  ajaxCall().done(function(response) {
                 columnChartjs(response.users,response.transactions,response.budgets); 
             }).fail(function(jqXHR, textStatus, errorThrown) {
@@ -276,6 +310,14 @@
     
 
 var barChartColors = getChartColorsArray("bar_chart");
+var food_count         =@json($data['budgets']->where('budget_category_id','1')->sum('amount'));
+var house_hold_count         =@json($data['budgets']->where('budget_category_id','2')->sum('amount'));
+var transport_count         =@json($data['budgets']->where('budget_category_id','3')->sum('amount'));
+var rent_count         =@json($data['budgets']->where('budget_category_id','7')->sum('amount'));
+var education_count         =@json($data['budgets']->where('budget_category_id','8')->sum('amount'));
+var contribution_count         =@json($data['budgets']->where('budget_category_id','9')->sum('amount'));
+var entertainment_count         =@json($data['budgets']->where('budget_category_id','11')->sum('amount'));
+var others_count         =@json($data['budgets']->where('budget_category_id','>','11')->sum('amount'));
 barChartColors && (options = {
     chart: {
         height: 350,
@@ -293,14 +335,14 @@ barChartColors && (options = {
         enabled: !1
     },
     series: [{
-        data: [380, 430, 450, 475, 550, 584, 780, 1100]
+        data: [food_count, house_hold_count, transport_count, rent_count, education_count,contribution_count, entertainment_count, others_count]
     }],
     colors: barChartColors,
     grid: {
         borderColor: "#f1f1f1"
     },
     xaxis: {
-        categories: ["Groceries", "Personal Care", "Food & Beverages", "Health", "Education", "Help & Giving", "Projects", "Others"]
+        categories: ["Food & Drinks", "Household exp", "Transport", "Rent", "Education", "Contribution", "Saving", "Others"]
     }
 }, (chart = new ApexCharts(document.querySelector("#bar_chart"), options)).render());
 
@@ -324,5 +366,43 @@ barChartColors && (options = {
               }
         }); 
     }
+
+    function pieChart(){
+
+        var cash         =@json($data['accounts']->where('account_type_id','1')->count());
+        var bank         =@json($data['accounts']->where('account_type_id','2')->count());
+        var mobile_money =@json($data['accounts']->where('account_type_id','3')->count());
+
+        var pieChartColors = getChartColorsArray("pie_chart");
+        pieChartColors &&
+            ((options = {
+                chart: { height: 335, type: "pie" },
+                series: [cash,bank,mobile_money],
+                labels: ["Cash", "Bank", "Mobile Money"],
+                colors: pieChartColors,
+                legend: { show: !0, position: "bottom", horizontalAlign: "center", verticalAlign: "middle", floating: !1, fontSize: "14px", offsetX: 0 },
+                responsive: [{ breakpoint: 600, options: { chart: { height: 240 }, legend: { show: !1 } } }],
+            }),
+            (chart = new ApexCharts(document.querySelector("#pie_chart"), options)).render());
+    }
+
+    function pieChartBudget(){
+
+        var expenses         =@json($data['categories']->where('category_group','expenses')->sum('budgets_sum_amount'));
+        var goals            =@json($data['categories']->where('category_group','goals')->sum('budgets_sum_amount'));
+        var budget           =@json($data['categories']->where('category_group','budget')->sum('budgets_sum_amount'));
+
+        var pieChartColors = getChartColorsArray("pie_chart");
+        pieChartColors &&
+            ((options = {
+                chart: { height: 335, type: "pie" },
+                series: [expenses,goals,budget],
+                labels: ["Expenses", "Goals","Budget"],
+                colors: pieChartColors,
+                legend: { show: !0, position: "bottom", horizontalAlign: "center", verticalAlign: "middle", floating: !1, fontSize: "14px", offsetX: 0 },
+                responsive: [{ breakpoint: 600, options: { chart: { height: 240 }, legend: { show: !1 } } }],
+            }),
+            (chart = new ApexCharts(document.querySelector("#pie_chart_2"), options)).render());
+        }
     </script>
 @endpush

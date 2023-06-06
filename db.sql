@@ -9,3 +9,6 @@ ALTER TABLE `categories` ADD `created_by` INT NOT NULL AFTER `icon_url`, ADD `up
 ALTER TABLE `categories` CHANGE `category_group` `category_group` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
 ALTER TABLE `users` ADD `uuid` VARCHAR(100) NULL DEFAULT NULL AFTER `timezone_id`;
 INSERT INTO `permission_categories` (`id`, `name`, `description`, `created_at`, `updated_at`) VALUES (NULL, 'User Permission', 'User permissions', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP), (NULL, 'Role permission', 'Role permissions', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+/// rgN7AZwbNezsKdITDqKZgOHPAJuHc5Qsc
+ALTER TABLE `accounts` ADD INDEX(`user_id`);

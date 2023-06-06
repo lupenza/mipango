@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Management\Ledger;
 use App\Models\Management\Budget;
+use App\Models\Management\Account;
+use App\Models\Management\category;
 use DateTime;
 
 
@@ -14,18 +16,18 @@ class AdminDashboardController extends Controller
 {
     public function index(){
         $ledgers =Ledger::with('user','category','account')->latest()->limit(6)->get();
-        $active_user =User::has('accounts')->count();
-       $data =[
-        'user'           =>User::count(),
-        'active_user'    =>$active_user,
-       // 'inactive_user'  =>User::with('accounts')->whereDoesntHave('accounts')->count(),
-        'inactive_user'  =>User::selectRaw('COUNT(*) AS count')
-                            ->leftJoin('accounts', 'users.id', '=', 'accounts.user_id')
-                            ->whereNull('accounts.user_id')
-                            ->count(),
-        'average_income' =>Ledger::sum('amount')/$active_user,
-        'transactions'    =>Ledger::cursor(),
-       ];
+       // $active_user =User::has('accounts')->count();
+        $users       =User::withCount('accounts')->get();
+       // return $users;
+        $data =[
+            'user'           =>User::count(),
+            'active_user'    =>$users->where('accounts_count','>',0)->count(),
+            'inactive_user'  =>$users->where('accounts_count',0)->count(),
+            'transactions'    =>Ledger::cursor(),
+            'accounts'        =>Account::whereyear('created_at',date('Y'))->cursor(),
+            'categories'      =>Category::withSum('budgets','amount')->cursor(),
+            'budgets'         =>Budget::whereYear('created_at',date('Y'))->cursor(),
+        ];
   
         return view('dashboards.admin_dashboard',compact('data','ledgers'));
     }
