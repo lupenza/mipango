@@ -46,9 +46,18 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
+                                <label for="Start Date">User Status</label>
+                                <select name="user_status" class="form-control" id="">
+                                    <option value="{{ $requests['user_status'] ?? null}}" selected>{{ $requests['user_status'] ?? "Choose  User Status"}}</option>
+                                    {{-- <option value="New Users">New Users</option> --}}
+                                    <option value="Active Users">Active Users</option>
+                                    <option value="Inactive Users">Inactive Users</option>
+                                </select>
+                            </div>
+                            {{-- <div class="col-md-3">
                                 <label for="Start Date">Phone Number</label>
                                 <input type="text" name="phone_number" class="form-control" value="{{ $requests['phone_number'] ?? null}}" placeholder="Write Phone Number">
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="form-group row" style="margin-top: 10px" >
                             <div class="col-md-12 text-center" >

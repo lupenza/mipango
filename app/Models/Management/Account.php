@@ -12,4 +12,13 @@ class Account extends Model
     public function account_type(){
         return $this->hasOne(AccountType::class,'id','account_type_id');
     }
+
+    public function scopeWithFilters($query,$request){
+        $account_id    =$request['account'] ?? null;
+
+        return $query->when($account_id,function($query) use ($account_id){
+            $query->where('account_type_id',$account_id);
+        });
+       
+    }
 }

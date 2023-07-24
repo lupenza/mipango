@@ -12,4 +12,6 @@ class AccountType extends Model
     protected $table='account_type';
 
     protected $fillable =['name','uuid','created_by','updated_by','description','name_sw'];
+
+    
 }

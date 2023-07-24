@@ -22,6 +22,7 @@ trait UserExportTrait{
                 'Accounts Total Balance'   =>$user->accounts->sum('balance'),
                 'No of Budgets'   =>$user->budgets->count(),
                 'Budgets Total Amount'   =>$user->budgets->sum('amount'),
+                'User Status'            =>$user->accounts_count > 0 ? "Active User": "In Active User"
             ];
         });
     }
@@ -64,6 +65,7 @@ trait UserExportTrait{
                 'Email'    =>$ledger->user->email ?? null,
                 'Phone Number'    =>$ledger->user->phone ?? null,
                 'Transaction category'     =>$ledger->category->name_en ?? null,
+                'Transaction category Group'     =>$ledger->category->category_group ?? null,
                 'Transaction Description'     =>$ledger->description,
                 'Transaction Amount'          =>$ledger->amount,
                 'Transaction Type'            =>$ledger->txn_type,

@@ -27,7 +27,8 @@ class Ledger extends Model
         $start_date    =$request['start_date'] ?? null;
         $end_date      =$request['end_date'] ?? null;
         $category      =$request['category'] ?? null;
-        $tranx_type        =$request['transaction_type'] ?? null;
+        $tranx_type    =$request['transaction_type'] ?? null;
+        $amount        =$request['amount'] ?? null;
 
 
         return $query->when($category,function($query) use ($category){
@@ -35,6 +36,14 @@ class Ledger extends Model
         })
         ->when($tranx_type,function($query) use ($tranx_type){
             $query->where('txn_type',$tranx_type);
+        })
+        ->when($amount,function($query) use ($amount){
+            if ($amount =="10000000+") {
+                $query->where('amount','>',10000000);
+            }else{
+                list($amountfrom, $amountto) = explode("-", $amount);
+                $query->whereBetween('amount',[$amountfrom,$amountto]);
+            }
         })
         ->when($start_date,function($query) use ($start_date,$end_date){
             if ($start_date != null || $end_date != null) {

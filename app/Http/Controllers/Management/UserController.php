@@ -12,8 +12,7 @@ use Str;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Classes\Traits\UserExportTrait;
-
-
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -31,14 +30,30 @@ class UserController extends Controller
 
      public function appUsers(Request $request){
         $requests =$request->all();
+        $user_status =$requests['user_status'] ?? null;
         $requests ? $num =null : $num =1000;
-        $users =User::with('roles','accounts','budgets','ledgers')->whereHas('roles',function($query){
+        $users =User::with('roles','accounts','budgets','ledgers')
+                ->whereHas('roles',function($query){
                     $query->where('name','User');
                 })
                 ->when($requests,function ($query) use ($requests){
                     $query->withFilters($requests);
                 })
-                 ->latest()->take($num)->get();
+                ->when($user_status === 'Active Users', function ($query) {
+                    $query->has('accounts', '>=', 1);
+                })
+                ->when($user_status === 'Inactive Users', function ($query) {
+                    $query->has('accounts', '=', 0);
+                })
+                ->when($num,function($query){
+                    $query->whereMonth('created_at', '=', Carbon::now()->month)
+                            ->whereYear('created_at', '=', Carbon::now()->year);
+                })
+                ->withCount('accounts')
+                 ->latest()
+                 //->take($num)
+                 ->get();
+                // return $users;
         return view('users.app_users',compact('users','requests'));
      }
 
@@ -191,6 +206,7 @@ class UserController extends Controller
 
     public function generateReport(Request $request){
         $requests =$request->all();
+        $user_status =$requests['user_status'] ?? null;
         $requests ? $num =null : $num =1000;
         $users =User::with('roles','accounts','budgets','ledgers')->whereHas('roles',function($query){
                     $query->where('name','User');
@@ -198,7 +214,19 @@ class UserController extends Controller
                 ->when($requests,function ($query) use ($requests){
                     $query->withFilters($requests);
                 })
-                 ->latest()->take($num)->get();
+                ->when($user_status === 'Active Users', function ($query) {
+                    $query->has('accounts', '>=', 1);
+                })
+                ->when($user_status === 'Inactive Users', function ($query) {
+                    $query->has('accounts', '=', 0);
+                })
+                 ->latest()
+                 ->withCount('accounts')
+                 ->when($num,function($query){
+                    $query->whereMonth('created_at', '=', Carbon::now()->month)
+                            ->whereYear('created_at', '=', Carbon::now()->year);
+                })
+                ->get();
 
         return $this->extendUserExport($users);
     }

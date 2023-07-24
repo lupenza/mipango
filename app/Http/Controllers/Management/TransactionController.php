@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Management\Ledger;
 use App\Models\Management\Category; 
+use App\Models\Management\AccountType; 
 use App\Classes\Traits\UserExportTrait;
 
 
@@ -16,14 +17,26 @@ class TransactionController extends Controller
 
     public function index(Request $request){
         $requests =$request->all();
+        $category_group =$requests['category_group'] ?? null;
         $requests ? $num =null : $num =1000;
         $categories =Category::orderBy('name_en','ASC')->get();
-        $ledgers =Ledger::with('user','category','account')
+        $accounts   =AccountType::get();
+        $ledgers    =Ledger::with('user','category','account','account.account_type')
                     ->when($requests ,function ($query) use ($requests){
                         $query->withFilters($requests);
                     })
-                   ->latest()->limit($num)->get();
-        return view('reports.transactions',compact('ledgers','categories','requests'));
+                    ->whereHas('account',function ($query) use ($requests){
+                        $query->withFilters($requests);
+                    })
+                    ->when($category_group, function ($query) use ($category_group) {
+                        $query->whereHas('category', function ($query) use ($category_group) {
+                            $query->where('category_group', $category_group);
+                        });
+                    })
+                    ->latest()
+                    ->limit($num)
+                    ->get();
+        return view('reports.transactions',compact('ledgers','categories','requests','accounts'));
     }
 
    
@@ -40,7 +53,12 @@ class TransactionController extends Controller
                     ->when($requests ,function ($query) use ($requests){
                         $query->withFilters($requests);
                     })
-                   ->latest()->limit($num)->get();  
+                    ->whereHas('account',function ($query) use ($requests){
+                        $query->withFilters($requests);
+                    })
+                   ->latest()
+                   ->limit($num)
+                   ->get();  
 
         return $this->extendTransationReport($ledgers);
     }
